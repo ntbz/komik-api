@@ -1,0 +1,16 @@
+{
+  "$schema": "https://raw.githubusercontent.com/SchemaStore/schemastore/master/src/schemas/json/nodemon.json",
+  "exec": "ts-node --transpile-only {{pwd}}/src/app.ts",
+  "watch": ["src/*"],
+  "ext": "ts,json",
+  "ignore": [
+    ".gitignore",
+    ".vscode",
+    "*.test.js",
+    "__*__/*.js",
+    "__tests__/*",
+    "node_modules"
+  ],
+  "colours": true,
+  "delay": 1000
+}
