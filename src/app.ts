@@ -5,6 +5,7 @@ import dotenv from 'dotenv'
 import { __devMode } from './utils/constants'
 import chapter from './router/chapter'
 import manga from './router/manga'
+import genre from './router/genre'
 
 dotenv.config()
 
@@ -34,6 +35,7 @@ app.get('/', (req: Request, res: Response) =>
 /** Router */
 app.use(chapter)
 app.use(manga)
+app.use(genre)
 
 /** Not Found */
 app.use('*', (req, res, next) =>

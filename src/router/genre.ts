@@ -32,13 +32,4 @@ genre.get('/genre', async (req, res) => {
   }
 })
 
-/**
- * TODO: complete this!
- */
-genre.get('/genre/:query', async (req, res) => {
-  const query: string = req.params.query
-
-  res.send(query)
-})
-
 export default genre
