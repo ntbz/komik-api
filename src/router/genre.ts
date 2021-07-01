@@ -4,6 +4,12 @@ import cheerio from 'cheerio'
 
 const genre = Router()
 
+/** add cache 24 hour */
+genre.use((req, res, next) => {
+  res.header('Cache-Control', 'max-age=86400, must-revalidate')
+  next()
+})
+
 /** Genre List */
 genre.get('/genre', async (req, res) => {
   try {
