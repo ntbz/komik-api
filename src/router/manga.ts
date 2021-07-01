@@ -12,68 +12,73 @@ manga.use((req, res, next) => {
   next()
 })
 
-
 /** Manga Detail */
 manga.get('/manga/:query', async (req: Request, res: Response) => {
   const query: string = req.params.query
 
   try {
     const response = await axiosInstance.get(`/manga/${query}/`)
-    // console.log('manga_detail', query)
 
     const $ = cheerio.load(response.data)
 
     const result: Record<string, string | object | boolean> = {}
 
-    result.status = true
-    result.title = $('#Judul > h1').text().trim()
-    result.idn_title = $('#Judul > .j2').text().trim()
-    result.description = $('#Judul > .desc').text().trim()
-    result.thumbnail = removeQueryParams(String($('#Informasi > .ims > img').attr('src')))
+    if (!!response.data) {
+      result.title = $('#Judul > h1').text().trim()
+      result.idn_title = $('#Judul > .j2').text().trim()
+      result.description = $('#Judul > .desc').text().trim()
+      result.thumbnail = removeQueryParams(String($('#Informasi > .ims > img').attr('src')))
 
-    const tabel_informasi = $('#Informasi > .inftable > tbody')
-    result.type = $(tabel_informasi)
-      .children()
-      .eq(1)
-      .find('td:nth-child(2) > a > b')
-      .text()
-      .trim()
-      .toLowerCase()
-    result.author = $(tabel_informasi).children().eq(3).find('td:nth-child(2)').text().trim()
-    result.status = $(tabel_informasi)
-      .children()
-      .eq(4)
-      .find('td:nth-child(2)')
-      .text()
-      .trim()
-      .toLowerCase()
+      const tabel_informasi = $('#Informasi > .inftable > tbody')
+      result.type = $(tabel_informasi)
+        .children()
+        .eq(1)
+        .find('td:nth-child(2) > a > b')
+        .text()
+        .trim()
 
-    /** Genre List */
-    const genre_list: string[] = []
-    $('.perapih')
-      .find('.genre > li')
-      .each((i, el) => {
-        genre_list.push($(el).find('a').text())
-      })
-    result.genre = genre_list
+        .toLowerCase()
+      result.author = $(tabel_informasi).children().eq(3).find('td:nth-child(2)').text().trim()
+      result.status = $(tabel_informasi)
+        .children()
+        .eq(4)
+        .find('td:nth-child(2)')
+        .text()
+        .trim()
+        .toLowerCase()
 
-    /** Chapter */
-    const chapter_list: object[] = []
-    $('#Daftar_Chapter > tbody')
-      .find('tr')
-      .each((i, el) => {
-        if (i == 0) return
-        let chapter_title = $(el).find('a').text().trim()
-        let chapter_endpoint = String($(el).find('a').attr('href'))
-          .replace('/ch/', '')
-          .replace(/\\|\//g, '')
+      /** Genre List */
+      const genre_list: string[] = []
+      $('.perapih')
+        .find('.genre > li')
+        .each((i, el) => {
+          genre_list.push($(el).find('a').text())
+        })
+      result.genre = genre_list
 
-        chapter_list.push({ chapter_title, chapter_endpoint })
-      })
+      /** Chapter */
+      const chapter_list: object[] = []
+      $('#Daftar_Chapter > tbody')
+        .find('tr')
+        .each((i, el) => {
+          if (i == 0) return
+          let chapter_title = $(el).find('a').text().trim()
+          let chapter_endpoint = String($(el).find('a').attr('href'))
+            .replace('/ch/', '')
+            .replace(/\\|\//g, '')
 
-    result.chapter = chapter_list
+          chapter_list.push({ chapter_title, chapter_endpoint })
+        })
 
-    return res.json(result)
+      result.chapter = chapter_list
+    } else {
+      res.statusCode = 404
+    }
+
+    return res.json({
+      status: res.statusCode == 200,
+      result,
+    })
   } catch (error) {
     console.error('manga_detail', error.name, error.message)
     return res.status(400).json({
@@ -119,10 +124,11 @@ manga.get('/search/:query', async (req: Request, res: Response) => {
         })
       })
 
-    res.statusCode = manga_list.length > 0 ? 200 : 404
+    const responseStatus = manga_list.length > 0
+    res.statusCode = responseStatus ? 200 : 404
 
     return res.json({
-      status: manga_list.length > 0,
+      status: responseStatus,
       result: manga_list,
     })
   } catch (error) {

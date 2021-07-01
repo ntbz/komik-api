@@ -41,7 +41,12 @@ chapter.get('/ch/:query', async (req: Request, res: Response) => {
 
     result.chapter_image = chapter_image
 
-    return res.json(result)
+    const responseStatus = result.chapter_image.length > 0
+    res.statusCode = responseStatus ? 200 : 404;
+    return res.json({
+      status: responseStatus,
+      result
+    })
   } catch (error) {
     console.error('chapter_detail', error.name, error.message)
     return res.status(400).json({
