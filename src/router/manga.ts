@@ -12,8 +12,14 @@ manga.use((req, res, next) => {
   next()
 })
 
+manga.get('/', (req, res) =>
+  res.json({
+    status: true,
+  }),
+)
+
 /** Manga Detail */
-manga.get('/manga/:query', async (req: Request, res: Response) => {
+manga.get('/detail/:query', async (req: Request, res: Response) => {
   const query: string = req.params.query
 
   try {

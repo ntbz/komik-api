@@ -6,7 +6,7 @@ module.exports = {
       watch: ['dist'],
       watch_delay: 1000,
       ignore_watch: ['node_modules', 'src'],
-      env_production: {
+      env: {
         NODE_ENV: 'production',
       },
       env_development: {

@@ -10,8 +10,15 @@ chapter.use((req, res, next) => {
   next()
 })
 
+chapter.get('/', (req, res) =>
+  res.json({
+    status: false,
+    message: 'give some path to me!',
+  }),
+)
+
 /** Chapter Detail */
-chapter.get('/ch/:query', async (req: Request, res: Response) => {
+chapter.get('/:query', async (req: Request, res: Response) => {
   if (!req.params.query)
     return res.status(400).json({
       status: false,
@@ -42,10 +49,10 @@ chapter.get('/ch/:query', async (req: Request, res: Response) => {
     result.chapter_image = chapter_image
 
     const responseStatus = result.chapter_image.length > 0
-    res.statusCode = responseStatus ? 200 : 404;
+    res.statusCode = responseStatus ? 200 : 404
     return res.json({
       status: responseStatus,
-      result
+      result,
     })
   } catch (error) {
     console.error('chapter_detail', error.name, error.message)

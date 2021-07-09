@@ -33,9 +33,11 @@ app.get('/', (req: Request, res: Response) =>
 )
 
 /** Router */
-app.use(chapter)
-app.use(manga)
-app.use(genre)
+app.use('/ch', chapter)
+app.use('/genre', genre)
+app.use('/manga', manga)
+
+app.get('/help', (req, res) => res.json({}))
 
 /** Not Found */
 app.use('*', (req, res, next) =>

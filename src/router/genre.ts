@@ -11,7 +11,7 @@ genre.use((req, res, next) => {
 })
 
 /** Genre List */
-genre.get('/genre', async (req, res) => {
+genre.get('/', async (req, res) => {
   try {
     const url: string = 'https://data.komiku.id/cari/?post_type=manga&s='
 
@@ -28,7 +28,8 @@ genre.get('/genre', async (req, res) => {
 
     return res.json({
       status: true,
-      genre_list,
+      path_name: 'genre_list',
+      result: genre_list,
     })
   } catch (error) {
     console.error('genre_list', error.name, error.message)
